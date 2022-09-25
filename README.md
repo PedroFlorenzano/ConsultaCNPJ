@@ -5,7 +5,8 @@ Exercício feito com único propósito de ingresso no processo de seleção para
 
 # Justificativas
 
-quanto a tecnologias - Utilizei o MySql pois já estou familiarizado com ele. Foi a primeira vez que utilizei o Visul Studio, então tive que aprender várias coisas. Também foi a primeira vez que utilizei o C# e o .NET. Utilzei também Newtonsoft.Json, Pomelo.EntityFrameworkCore. , 
+quanto a tecnologias - Utilizei o MySql pois já estou familiarizado com ele. Foi a primeira vez que utilizei o Visul Studio, então tive que aprender várias coisas. Também foi a primeira vez que utilizei o C# e o .NET. Utilzei também Newtonsoft.Json, Pomelo.EntityFrameworkCore.
+
 padrões de design - Dividi nas seguintes camadas:
 
 

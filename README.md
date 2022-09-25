@@ -28,6 +28,9 @@ Sinta-se a vontade para descrever nesta seção tudo aquilo que dificultou a com
 Suas considerações finais em relação ao exercício!
 
 ## Video do processo
-![gif compressed x2](https://user-images.githubusercontent.com/89752080/192152342-302b3333-c783-41b3-bb36-039680881b68.gif)
+
+
+
+https://user-images.githubusercontent.com/89752080/192152909-09f92347-a0fe-48a6-ae70-303cc15a4dd3.mp4
 
 

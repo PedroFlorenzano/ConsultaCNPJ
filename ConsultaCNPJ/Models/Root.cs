@@ -42,7 +42,6 @@ namespace ConsultaCNPJ.Models
         public string situacao_especial { get; set; }
         public string data_situacao_especial { get; set; }
         public string capital_social { get; set; }
-        public Extra extra { get; set; }
-        public Billing billing { get; set; }
+        
     }
 }

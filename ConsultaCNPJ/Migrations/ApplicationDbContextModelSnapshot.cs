@@ -25,12 +25,12 @@ namespace ConsultaCNPJ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("RootID")
-                        .HasColumnType("int");
-
                     b.Property<string>("code")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("rootID")
+                        .HasColumnType("int");
 
                     b.Property<string>("text")
                         .IsRequired()
@@ -38,7 +38,7 @@ namespace ConsultaCNPJ.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("RootID");
+                    b.HasIndex("rootID");
 
                     b.ToTable("AtividadePrincipal");
                 });
@@ -49,12 +49,12 @@ namespace ConsultaCNPJ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("RootID")
-                        .HasColumnType("int");
-
                     b.Property<string>("code")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("rootID")
+                        .HasColumnType("int");
 
                     b.Property<string>("text")
                         .IsRequired()
@@ -62,7 +62,7 @@ namespace ConsultaCNPJ.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("RootID");
+                    b.HasIndex("rootID");
 
                     b.ToTable("AtividadesSecundaria");
                 });
@@ -79,9 +79,14 @@ namespace ConsultaCNPJ.Migrations
                     b.Property<bool>("free")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("rootID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
-                    b.ToTable("Billing");
+                    b.HasIndex("rootID");
+
+                    b.ToTable("billings");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.Extra", b =>
@@ -90,18 +95,20 @@ namespace ConsultaCNPJ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("rootID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
-                    b.ToTable("Extra");
+                    b.HasIndex("rootID");
+
+                    b.ToTable("extras");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.Qsa", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RootID")
                         .HasColumnType("int");
 
                     b.Property<string>("nome")
@@ -112,9 +119,12 @@ namespace ConsultaCNPJ.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("rootID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("RootID");
+                    b.HasIndex("rootID");
 
                     b.ToTable("Qsa");
                 });
@@ -132,9 +142,6 @@ namespace ConsultaCNPJ.Migrations
                     b.Property<string>("bairro")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("billingID")
-                        .HasColumnType("int");
 
                     b.Property<string>("capital_social")
                         .IsRequired()
@@ -168,9 +175,6 @@ namespace ConsultaCNPJ.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("extraID")
-                        .HasColumnType("int");
-
                     b.Property<string>("fantasia")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -193,7 +197,8 @@ namespace ConsultaCNPJ.Migrations
 
                     b.Property<string>("nome")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Nome");
 
                     b.Property<string>("numero")
                         .IsRequired()
@@ -232,51 +237,62 @@ namespace ConsultaCNPJ.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("billingID");
-
-                    b.HasIndex("extraID");
-
                     b.ToTable("roots");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.AtividadePrincipal", b =>
                 {
-                    b.HasOne("ConsultaCNPJ.Models.Root", null)
+                    b.HasOne("ConsultaCNPJ.Models.Root", "root")
                         .WithMany("atividade_principal")
-                        .HasForeignKey("RootID");
+                        .HasForeignKey("rootID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("root");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.AtividadesSecundaria", b =>
                 {
-                    b.HasOne("ConsultaCNPJ.Models.Root", null)
+                    b.HasOne("ConsultaCNPJ.Models.Root", "root")
                         .WithMany("atividades_secundarias")
-                        .HasForeignKey("RootID");
+                        .HasForeignKey("rootID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("root");
+                });
+
+            modelBuilder.Entity("ConsultaCNPJ.Models.Billing", b =>
+                {
+                    b.HasOne("ConsultaCNPJ.Models.Root", "root")
+                        .WithMany()
+                        .HasForeignKey("rootID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("root");
+                });
+
+            modelBuilder.Entity("ConsultaCNPJ.Models.Extra", b =>
+                {
+                    b.HasOne("ConsultaCNPJ.Models.Root", "root")
+                        .WithMany()
+                        .HasForeignKey("rootID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("root");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.Qsa", b =>
                 {
-                    b.HasOne("ConsultaCNPJ.Models.Root", null)
+                    b.HasOne("ConsultaCNPJ.Models.Root", "root")
                         .WithMany("qsa")
-                        .HasForeignKey("RootID");
-                });
-
-            modelBuilder.Entity("ConsultaCNPJ.Models.Root", b =>
-                {
-                    b.HasOne("ConsultaCNPJ.Models.Billing", "billing")
-                        .WithMany()
-                        .HasForeignKey("billingID")
+                        .HasForeignKey("rootID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ConsultaCNPJ.Models.Extra", "extra")
-                        .WithMany()
-                        .HasForeignKey("extraID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("billing");
-
-                    b.Navigation("extra");
+                    b.Navigation("root");
                 });
 
             modelBuilder.Entity("ConsultaCNPJ.Models.Root", b =>

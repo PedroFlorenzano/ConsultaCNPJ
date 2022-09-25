@@ -8,5 +8,7 @@ namespace ConsultaCNPJ.Models
         public int ID { get; set; }
         public string text { get; set; }
         public string code { get; set; }
+
+        public Root root { get; set;}
     }
 }

@@ -21,7 +21,7 @@ namespace ConsultaCNPJ.Controllers
         }
 
 
-        [HttpGet("CriaCNPJ")] //
+        [HttpGet("Busca e Insere CNPJ")] //
         public async Task <IActionResult> CNPJ (string cnpj) //uma interface dizendo que vai retornar um resultado. Assincrono = pode fazer ele ou outras coisas. Sincrono = faz uma unica coisa, ele quebra sua aplicação
         {
             var httpclient = new HttpClient();
@@ -35,24 +35,45 @@ namespace ConsultaCNPJ.Controllers
         }
 
 
-        [HttpGet("BuscaCNPJ")] //
-        public async Task<IActionResult> BuscaCNPJ(string cnpj) //uma interface dizendo que vai retornar um resultado. Assincrono = pode fazer ele ou outras coisas. Sincrono = faz uma unica coisa, ele quebra sua aplicação
+        [HttpGet("Busca_CNPJ")] //
+        public async Task<IActionResult> BuscaCNPJ (string cnpj) //uma interface dizendo que vai retornar um resultado. Assincrono = pode fazer ele ou outras coisas. Sincrono = faz uma unica coisa, ele quebra sua aplicação
         {
-            var httpclient = new HttpClient();
-            var response = await httpclient.GetAsync(EndPointConsumo + cnpj); // buscando o cnpj na api
-            var result = response.Content.ReadAsStringAsync().Result; // pegando só o corpo do 
-            Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(result);  //esse vai ser o objeto que vamos passar para o Json
-            if(myDeserializedClass == null)
-            {
-                return BadRequest(new { msg = "CNPJ inválido" });
-
-            }
-            _dbContext.Add(myDeserializedClass); //adicionando o json no banco de dados
-            _dbContext.SaveChanges(); //salvando esses dados
-            return Ok(new { msg = "Criado no banco com sucesso" });
+            var y = _dbContext.roots.Select(x => new Root { ID = x.ID, 
+                atividade_principal = x.atividade_principal, 
+                data_situacao = x.data_situacao, complemento = x.complemento, 
+                tipo = x.tipo, nome = x.nome, abertura = x.abertura, telefone = x.telefone, 
+                email = x.email, atividades_secundarias = x.atividades_secundarias, 
+                qsa = x.qsa, situacao = x.situacao, bairro = x.bairro, logradouro = x.logradouro, 
+                numero = x.numero, cep = x.cep, municipio = x.municipio, uf = x.uf, porte = x.porte, 
+                natureza_juridica = x.natureza_juridica, fantasia = x.fantasia, cnpj = x.cnpj, 
+                ultima_atualizacao = x.ultima_atualizacao, status = x.status, efr = x.efr, motivo_situacao = x.motivo_situacao, 
+                situacao_especial = x.situacao_especial, data_situacao_especial = x.data_situacao_especial, 
+                capital_social = x.capital_social }).ToList().AsReadOnly();
+            
+            return Ok(y);
 
         }
 
 
+
+        [HttpDelete("Delete cnpj")]
+        public async Task<IActionResult> Delete(string cnpj)
+        {
+            Root r = new Root();
+           
+            var x = _dbContext.roots.Include(x => x.atividade_principal).Include(x => x.atividades_secundarias).
+                Include(x => x.qsa).FirstOrDefault(x => x.cnpj == cnpj);
+
+            if (x == null)
+            {
+                return NotFound();
+
+            }
+            _dbContext.Remove(x);
+            await _dbContext.SaveChangesAsync();
+            return Ok("Deletado com Sucesso");
+        }
+
     }
 }
+    

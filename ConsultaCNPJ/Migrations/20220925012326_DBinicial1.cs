@@ -14,34 +14,6 @@ namespace ConsultaCNPJ.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Billing",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    free = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    database = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Billing", x => x.ID);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Extra",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Extra", x => x.ID);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "roots",
                 columns: table => new
                 {
@@ -53,7 +25,7 @@ namespace ConsultaCNPJ.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     tipo = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    nome = table.Column<string>(type: "longtext", nullable: false)
+                    Nome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     abertura = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -95,25 +67,11 @@ namespace ConsultaCNPJ.Migrations
                     data_situacao_especial = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     capital_social = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    extraID = table.Column<int>(type: "int", nullable: false),
-                    billingID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_roots", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_roots_Billing_billingID",
-                        column: x => x.billingID,
-                        principalTable: "Billing",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_roots_Extra_extraID",
-                        column: x => x.extraID,
-                        principalTable: "Extra",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -127,16 +85,17 @@ namespace ConsultaCNPJ.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     code = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RootID = table.Column<int>(type: "int", nullable: true)
+                    rootID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AtividadePrincipal", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AtividadePrincipal_roots_RootID",
-                        column: x => x.RootID,
+                        name: "FK_AtividadePrincipal_roots_rootID",
+                        column: x => x.rootID,
                         principalTable: "roots",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -150,16 +109,59 @@ namespace ConsultaCNPJ.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     code = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RootID = table.Column<int>(type: "int", nullable: true)
+                    rootID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AtividadesSecundaria", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AtividadesSecundaria_roots_RootID",
-                        column: x => x.RootID,
+                        name: "FK_AtividadesSecundaria_roots_rootID",
+                        column: x => x.rootID,
                         principalTable: "roots",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "billings",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    free = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    database = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    rootID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_billings", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_billings_roots_rootID",
+                        column: x => x.rootID,
+                        principalTable: "roots",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "extras",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    rootID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_extras", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_extras_roots_rootID",
+                        column: x => x.rootID,
+                        principalTable: "roots",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -173,43 +175,44 @@ namespace ConsultaCNPJ.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     qual = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RootID = table.Column<int>(type: "int", nullable: true)
+                    rootID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Qsa", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Qsa_roots_RootID",
-                        column: x => x.RootID,
+                        name: "FK_Qsa_roots_rootID",
+                        column: x => x.rootID,
                         principalTable: "roots",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AtividadePrincipal_RootID",
+                name: "IX_AtividadePrincipal_rootID",
                 table: "AtividadePrincipal",
-                column: "RootID");
+                column: "rootID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AtividadesSecundaria_RootID",
+                name: "IX_AtividadesSecundaria_rootID",
                 table: "AtividadesSecundaria",
-                column: "RootID");
+                column: "rootID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Qsa_RootID",
+                name: "IX_billings_rootID",
+                table: "billings",
+                column: "rootID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_extras_rootID",
+                table: "extras",
+                column: "rootID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Qsa_rootID",
                 table: "Qsa",
-                column: "RootID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_roots_billingID",
-                table: "roots",
-                column: "billingID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_roots_extraID",
-                table: "roots",
-                column: "extraID");
+                column: "rootID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -221,16 +224,16 @@ namespace ConsultaCNPJ.Migrations
                 name: "AtividadesSecundaria");
 
             migrationBuilder.DropTable(
+                name: "billings");
+
+            migrationBuilder.DropTable(
+                name: "extras");
+
+            migrationBuilder.DropTable(
                 name: "Qsa");
 
             migrationBuilder.DropTable(
                 name: "roots");
-
-            migrationBuilder.DropTable(
-                name: "Billing");
-
-            migrationBuilder.DropTable(
-                name: "Extra");
         }
     }
 }

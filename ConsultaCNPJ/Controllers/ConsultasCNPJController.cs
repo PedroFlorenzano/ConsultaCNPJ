@@ -59,7 +59,7 @@ namespace ConsultaCNPJ.Controllers
         [HttpDelete("Delete cnpj")]
         public async Task<IActionResult> Delete(string cnpj)
         {
-            Root r = new Root();
+            //Root r = new Root();
            
             var x = _dbContext.roots.Include(x => x.atividade_principal).Include(x => x.atividades_secundarias).
                 Include(x => x.qsa).FirstOrDefault(x => x.cnpj == cnpj);
